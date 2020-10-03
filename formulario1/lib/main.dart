@@ -10,11 +10,33 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo Formulario',
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+        ),
         home: Scaffold(
           appBar: AppBar(
-            title: Text("Formulario Demo"),
+            leading: IconButton(
+              icon: Icon(Icons.message),
+              tooltip: 'Navigation menu',
+              onPressed: null,
+            ),
+            title: Text(
+              "Formulario Demo",
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.search),
+                tooltip: 'Search',
+                onPressed: null,
+              ),
+            ],
           ),
           body: MyCustomForm(),
+          floatingActionButton: FloatingActionButton(
+            tooltip: 'Add', // used by assistive technologies
+            child: Icon(Icons.traffic),
+            onPressed: null,
+          ),
         ));
   }
 }
