@@ -70,6 +70,11 @@ class ClientDatabaseProvider {
     db.delete("Client");
   }
 
+  deleteClientWithId(int id) async {
+    final db = await database;
+    return db.delete("Client", where: "id = ?", whereArgs: [id]);
+  }
+
   //Update by Id
   updateClient(Cliente updclient) async {
     final db = await database;

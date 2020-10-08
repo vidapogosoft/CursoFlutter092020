@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite1/db/database.dart';
 import 'package:sqflite1/model/client_model.dart';
+import 'package:sqflite1/add_editclient.dart';
 
 void main() {
   runApp(MyApp());
@@ -63,20 +64,33 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context, AsyncSnapshot<List<Cliente>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-              physics: BouncingScrollPhysics(),
-              //Count all records
+              scrollDirection: Axis.vertical,
+
+              physics: ClampingScrollPhysics(),
+
+              //Contar todos los registros
               itemCount: snapshot.data.length,
+
               itemBuilder: (BuildContext context, int index) {
                 Cliente item = snapshot.data[index];
 
                 return Dismissible(
                     key: UniqueKey(),
                     background: Container(color: Colors.red),
+                    onDismissed: (diretion) {
+                      ClientDatabaseProvider.db.deleteClientWithId(item.id);
+                    },
                     child: ListTile(
-                      title: Text(item.name),
-                      subtitle: Text(item.phone),
-                      leading: CircleAvatar(child: Text(item.id.toString())),
-                    ));
+                        title: Text(item.name),
+                        subtitle: Text(item.phone),
+                        leading: CircleAvatar(child: Text(item.id.toString())),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => AddEditClient(
+                                    true,
+                                    client: item,
+                                  )));
+                        }));
               },
             );
           } else {
@@ -86,9 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add), onPressed: () {}
-          //{ Navigator.of.(context).push(MaterialPageRoute(builder: (context) => AddEditClient())); }
-          ),
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => AddEditClient(false)));
+          }),
 
       // This trailing comma makes auto-formatting nicer for build methods.
     );
